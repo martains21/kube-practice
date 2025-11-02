@@ -1,76 +1,162 @@
-# kube-practice
+# Kube Practice: FastAPI Application
 
-## RU:
+## 🇷🇺 Russian
 
-### Данный репозиторий это мое решение следующего задания:
+Этот репозиторий — учебный проект по развертыванию Python-приложения в Kubernetes.
 
-1.	Развернуть minikube
-2.	Используя базовый образ Centos 7 написать  Dockerfile для запуска  Nginx, с учетом указанных ниже требований
-3.	Написать helm chart. в котором
-3.1.	Configmap для переменных окружения (ENVIRONMENT) 
-3.1.1.	Переменная ENVIRONMENT должна иметь значения: dev, stage, prod в зависимости от окружения
-3.2.	Secret для секретных переменных окружения (ENVIRONMENT_FROM_SECRET) 
-3.2.1.	Секреты должны шифроваться любым способом доступным для k8s (например: helm-secrets)
-3.2.2.	Секрет ENVIRONMENT_FROM_SECRET должен иметь значения: secret_dev, secret_stage, secret_prod в зависимости от окружения
-3.3.	Deployment, который будет 
-3.3.1.	Запускать 2 реплики приложения
-3.3.2.	Работать на 8000 порте
-3.3.3.	Прокидывать в контейнер ConfigMap и Secret
-3.3.4.	Иметь readiness и liveness probes по эндпоинту /healthcheck
-3.4.	Service типа ClusterIP
-3.5.	Ingress для nginx сервера, который должен сконфигурирован для хостов 
-3.5.1.	dev - localhost
-3.5.2.	stage – stage.domain.space
-3.5.3.	prod - prod.domain.space
-3.6.	CertManager в котором 
-3.6.1.	Issuer для выписывания сертификатов acme-letsencrypt через http01.ingess
-3.6.2.	Certificate - соответствующий сертификат связанный с Issuer для доменов окружений stage и prod
-3.6.3.	P.S. Ествественно не нужно пытаться выписывать сертификаты, только написать манифесты
-3.7.	HorizontalPodAutoscaler, который будет 
-3.7.1.	Скейлить реплики от 2 до 4
-3.7.2.	Триггер для скейла будет использование CPU или ОЗУ в 80%
-3.8.	helmfile для трех (dev, stage, prod) окружений
-3.9.	Максимально использовать общие переменные и переиспользовать переменные окружений по необходимости
-3.10.	Написать полную пошаговую инструкцию по сборке приложения и запуску через minikube
-3.11.	Используя helm chart выполнить деплой в minikube 
-4.	Проверить работату по адресу http://0.0.0.0:8000/ и отображать значение переменной ENVIRONMENT в ответе, сделать скриншот
-5.	По адресу http://0.0.0.0:8000/docs отображать значение переменной ENVIRONMENT_FROM_SECRET в заголовке страницы
-6.	Подготовлены файлы конфигураций для всех окружений
+На данный момент проект содержит простое веб-приложение на FastAPI, которое упаковано в Docker-контейнер. Конечная цель проекта — развернуть приложение в Kubernetes с использованием Helm, настроив несколько окружений, автомасштабирование и управление трафиком.
 
-## ENG:
+### 🚀 Используемые технологии (на текущий момент)
 
-### This repo is my solution for that task:
+*   **Язык:** Python 3.14
+*   **Фреймворк:** FastAPI
+*   **Контейнеризация:** Docker
 
+### 🛠️ Как запустить текущую версию
 
-1.	Deploy minikube
-2.	Using the base CentOS 7 image, write a Dockerfile to run Nginx, considering the requirements below
-3.	Write a Helm chart that includes:
-3.1.	ConfigMap for environment variables (ENVIRONMENT)
-3.1.1.	The ENVIRONMENT variable must have values: dev, stage, prod depending on the environment
-3.2.	Secret for sensitive environment variables (ENVIRONMENT_FROM_SECRET)
-3.2.1.	Secrets must be encrypted using any method available in k8s (e.g., helm-secrets)
-3.2.2.	The ENVIRONMENT_FROM_SECRET secret must have values: secret_dev, secret_stage, secret_prod depending on the environment
-3.3.	A Deployment that will:
-3.3.1.	Run 2 application replicas
-3.3.2.	Operate on port 8000
-3.3.3.	Inject ConfigMap and Secret into the container
-3.3.4.	Have readiness and liveness probes on the /healthcheck endpoint
-3.4.	A ClusterIP-type Service
-3.5.	An Ingress for the nginx server, configured for the following hosts:
-3.5.1.	dev - localhost
-3.5.2.	stage – stage.domain.space
-3.5.3.	prod - prod.domain.space
-3.6.	CertManager in which:
-3.6.1.	An Issuer for obtaining acme-letsencrypt certificates via http01.ingress
-3.6.2.	A Certificate linked to the Issuer for stage and prod environment domains
-3.6.3.	P.S. Naturally, do not attempt to actually issue certificates, only write the manifests
-3.7.	A HorizontalPodAutoscaler that will:
-3.7.1.	Scale replicas from 2 to 4
-3.7.2.	Use CPU or RAM usage at 80% as the trigger for scaling
-3.8.	A helmfile for three environments (dev, stage, prod)
-3.9.	Maximize the use of shared variables and reuse environment variables as needed
-3.10.	Write a complete step-by-step guide for building the application and deploying via minikube
-3.11.	Use the Helm chart to deploy to minikube
-4.	Verify operation at http://0.0.0.0:8000/ and display the ENVIRONMENT variable value in the response, take a screenshot
-5.	Display the ENVIRONMENT_FROM_SECRET variable value in the page header at http://0.0.0.0:8000/docs
-6.	Prepare configuration files for all environments
+#### Вариант 1: Запуск через Python (виртуальное окружение)
+
+1.  **Клонировать репозиторий:**
+    ```bash
+    git clone https://github.com/martains21/kube-practice.git
+    cd kube-practice
+    ```
+
+2.  **Создать и активировать виртуальное окружение:**
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
+
+3.  **Установить зависимости:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4.  **Запустить приложение:**
+    ```bash
+    uvicorn app.main:app --reload
+    ```
+    Приложение будет доступно по адресу `http://127.0.0.1:8000`.
+
+#### Вариант 2: Запуск через Docker
+
+1.  **Убедитесь, что Docker запущен.**
+
+2.  **Собрать Docker-образ:**
+    ```bash
+    docker build -t kube-practice-app .
+    ```
+
+3.  **Запустить контейнер:**
+    ```bash
+    docker run --rm -p 8000:80 kube-practice-app
+    ```
+    Приложение будет доступно по адресу `http://localhost:8000`.
+
+<br>
+
+<details>
+<summary><b>📋 Цель Проекта (Полное Тестовое Задание)</b></summary>
+
+1.  Развернуть minikube
+2.  Используя базовый образ Centos 7, написать Dockerfile для запуска Nginx.
+3.  Написать helm chart, в котором:
+    *   3.1. **Configmap** для переменной окружения `ENVIRONMENT` (`dev`, `stage`, `prod`).
+    *   3.2. **Secret** для переменной `ENVIRONMENT_FROM_SECRET` (`secret_dev`, `secret_stage`, `secret_prod`) с шифрованием (например, helm-secrets).
+    *   3.3. **Deployment**, который будет:
+        *   3.3.1. Запускать 2 реплики приложения.
+        *   3.3.2. Работать на 8000 порте.
+        *   3.3.3. Прокидывать в контейнер ConfigMap и Secret.
+        *   3.3.4. Иметь `readiness` и `liveness` probes по эндпоинту `/healthcheck`.
+    *   3.4. **Service** типа ClusterIP.
+    *   3.5. **Ingress** для хостов: `localhost` (dev), `stage.domain.space` (stage), `prod.domain.space` (prod).
+    *   3.6. **CertManager** с манифестами для Issuer и Certificate (без реального выпуска).
+    *   3.7. **HorizontalPodAutoscaler** для скейлинга от 2 до 4 реплик по CPU/RAM > 80%.
+    *   3.8. **Helmfile** для трех окружений (dev, stage, prod).
+4.  Проверить работу, отобразив переменные `ENVIRONMENT` и `ENVIRONMENT_FROM_SECRET` в ответах приложения.
+5.  Подготовить файлы конфигураций для всех окружений.
+
+</details>
+
+---
+<br>
+
+## 🇬🇧 English
+
+This repository is a learning project focused on deploying a Python application to Kubernetes.
+
+Currently, the project consists of a simple web application built with FastAPI and containerized using Docker. The ultimate goal is to deploy the application to Kubernetes using Helm, setting up multiple environments, autoscaling, and traffic management.
+
+### 🚀 Technologies Used (so far)
+
+*   **Language:** Python 3.14
+*   **Framework:** FastAPI
+*   **Containerization:** Docker
+
+### 🛠️ How to Run the Current Version
+
+#### Option 1: Running with Python (virtual environment)
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/martains21/kube-practice.git
+    cd kube-practice
+    ```
+
+2.  **Create and activate the virtual environment:**
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
+
+3.  **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4.  **Run the application:**
+    ```bash
+    uvicorn app.main:app --reload
+    ```
+    The application will be available at `http://12.7.0.0.1:8000`.
+
+#### Option 2: Running with Docker
+
+1.  **Make sure Docker is running.**
+
+2.  **Build the Docker image:**
+    ```bash
+    docker build -t kube-practice-app .
+    ```
+
+3.  **Run the container:**
+    ```bash
+    docker run --rm -p 8000:80 kube-practice-app
+    ```
+    The application will be available at `http://localhost:8000`.
+
+<br>
+
+<details>
+<summary><b>📋 Project Goal (Full Task Description)</b></summary>
+
+1.  Deploy minikube
+2.  Using the base CentOS 7 image, write a Dockerfile to run Nginx.
+3.  Write a Helm chart that includes:
+    *   3.1. **ConfigMap** for the `ENVIRONMENT` variable (`dev`, `stage`, `prod`).
+    *   3.2. **Secret** for `ENVIRONMENT_FROM_SECRET` (`secret_dev`, `secret_stage`, `secret_prod`) with encryption (e.g., helm-secrets).
+    *   3.3. A **Deployment** that will:
+        *   3.3.1. Run 2 application replicas.
+        *   3.3.2. Operate on port 8000.
+        *   3.3.3. Inject ConfigMap and Secret into the container.
+        *   3.3.4. Have `readiness` and `liveness` probes on the `/healthcheck` endpoint.
+    *   3.4. A **Service** of type ClusterIP.
+    *   3.5. An **Ingress** for hosts: `localhost` (dev), `stage.domain.space` (stage), `prod.domain.space` (prod).
+    *   3.6. **CertManager** with manifests for an Issuer and Certificate (without actual issuance).
+    *   3.7. A **HorizontalPodAutoscaler** to scale replicas from 2 to 4 based on CPU/RAM > 80%.
+    *   3.8. A **Helmfile** for three environments (dev, stage, prod).
+4.  Verify by displaying the `ENVIRONMENT` and `ENVIRONMENT_FROM_SECRET` variables in the application's responses.
+5.  Prepare configuration files for all environments.
+
+</details>
