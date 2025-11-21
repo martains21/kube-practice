@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Задание №5: Секрет должен быть в заголовке страницы -->
+    <title>${ENVIRONMENT_FROM_SECRET}</title>
+</head>
+<body>
+    <h1>Welcome to Nginx on CentOS!</h1>
+    <!-- Задание №4: Переменная окружения в ответе -->
+    <p>Current Environment: <strong>${ENVIRONMENT}</strong></p>
+</body>
+</html>
