@@ -1,20 +1,20 @@
-# Kube Practice: FastAPI Application
+# Kube Practice: Nginx Deployment with Helm
 
 ## 🇷🇺 Russian
 
-Этот репозиторий — учебный проект по развертыванию Python-приложения в Kubernetes.
+Этот репозиторий представляет собой решение тестового задания по развертыванию веб-сервера Nginx в Kubernetes с использованием Helm.
 
-На данный момент проект содержит простое веб-приложение на FastAPI, которое упаковано в Docker-контейнер. Конечная цель проекта — развернуть приложение в Kubernetes с использованием Helm, настроив несколько окружений, автомасштабирование и управление трафиком.
+**Текущий статус:** Реализован Docker-образ на базе CentOS 7, который запускает Nginx. Nginx настроен так, чтобы динамически отображать значения, переданные через переменные окружения, что является основой для последующего развертывания в Kubernetes.
 
-### 🚀 Используемые технологии (на текущий момент)
+### 🚀 Используемые технологии
 
-*   **Язык:** Python 3.14
-*   **Фреймворк:** FastAPI
 *   **Контейнеризация:** Docker
+*   **Базовый образ:** CentOS 7
+*   **Веб-сервер:** Nginx
+*   **Оркестрация (планируется):** Kubernetes (Minikube)
+*   **Управление пакетами (планируется):** Helm, Helmfile
 
-### 🛠️ Как запустить текущую версию
-
-#### Вариант 1: Запуск через Python (виртуальное окружение)
+### 🛠️ Как запустить текущую версию (локально через Docker)
 
 1.  **Клонировать репозиторий:**
     ```bash
@@ -22,44 +22,32 @@
     cd kube-practice
     ```
 
-2.  **Создать и активировать виртуальное окружение:**
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
-
-3.  **Установить зависимости:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4.  **Запустить приложение:**
-    ```bash
-    uvicorn app.main:app --reload
-    ```
-    Приложение будет доступно по адресу `http://127.0.0.1:8000`.
-
-#### Вариант 2: Запуск через Docker
-
-1.  **Убедитесь, что Docker запущен.**
-
 2.  **Собрать Docker-образ:**
     ```bash
-    docker build -t kube-practice-app .
+    docker build -t nginx-centos:v1 .
     ```
 
 3.  **Запустить контейнер:**
+    *Команда запускает Nginx на порту 8000 и передает внутрь тестовые переменные окружения.*
     ```bash
-    docker run --rm -p 8000:80 kube-practice-app
+    docker run --rm -p 8080:8000 \
+      -e ENVIRONMENT="local-docker-test" \
+      -e ENVIRONMENT_FROM_SECRET="My Docker Secret" \
+      --name my-nginx-test \
+      nginx-centos:v1
     ```
-    Приложение будет доступно по адресу `http://localhost:8000`.
+
+4.  **Проверить работоспособность:**
+    *   Откройте в браузере `http://localhost:8080`.
+    *   На странице должно отображаться: `Current Environment: local-docker-test`.
+    *   Заголовок вкладки в браузере должен быть: `My Docker Secret`.
 
 <br>
 
 <details>
 <summary><b>📋 Цель Проекта (Полное Тестовое Задание)</b></summary>
 
-1.  Развернуть minikube
+1.  Развернуть minikube.
 2.  Используя базовый образ Centos 7, написать Dockerfile для запуска Nginx.
 3.  Написать helm chart, в котором:
     *   3.1. **Configmap** для переменной окружения `ENVIRONMENT` (`dev`, `stage`, `prod`).
@@ -76,6 +64,7 @@
     *   3.8. **Helmfile** для трех окружений (dev, stage, prod).
 4.  Проверить работу, отобразив переменные `ENVIRONMENT` и `ENVIRONMENT_FROM_SECRET` в ответах приложения.
 5.  Подготовить файлы конфигураций для всех окружений.
+6.  Результат в составе: helm chart, скриншоты оформить на публичном Git репозитории и прислать ссылку.
 
 </details>
 
@@ -84,19 +73,19 @@
 
 ## 🇬🇧 English
 
-This repository is a learning project focused on deploying a Python application to Kubernetes.
+This repository is a solution for a technical assignment focused on deploying an Nginx web server to Kubernetes using Helm.
 
-Currently, the project consists of a simple web application built with FastAPI and containerized using Docker. The ultimate goal is to deploy the application to Kubernetes using Helm, setting up multiple environments, autoscaling, and traffic management.
+**Current Status:** A Docker image based on CentOS 7 has been implemented to run Nginx. The server is configured to dynamically display values passed via environment variables, which serves as the foundation for the subsequent Kubernetes deployment.
 
-### 🚀 Technologies Used (so far)
+### 🚀 Technologies Used
 
-*   **Language:** Python 3.14
-*   **Framework:** FastAPI
 *   **Containerization:** Docker
+*   **Base Image:** CentOS 7
+*   **Web Server:** Nginx
+*   **Orchestration (planned):** Kubernetes (Minikube)
+*   **Package Management (planned):** Helm, Helmfile
 
-### 🛠️ How to Run the Current Version
-
-#### Option 1: Running with Python (virtual environment)
+### 🛠️ How to Run the Current Version (Locally with Docker)
 
 1.  **Clone the repository:**
     ```bash
@@ -104,44 +93,32 @@ Currently, the project consists of a simple web application built with FastAPI a
     cd kube-practice
     ```
 
-2.  **Create and activate the virtual environment:**
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
-
-3.  **Install dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4.  **Run the application:**
-    ```bash
-    uvicorn app.main:app --reload
-    ```
-    The application will be available at `http://12.7.0.0.1:8000`.
-
-#### Option 2: Running with Docker
-
-1.  **Make sure Docker is running.**
-
 2.  **Build the Docker image:**
     ```bash
-    docker build -t kube-practice-app .
+    docker build -t nginx-centos:v1 .
     ```
 
 3.  **Run the container:**
+    *This command runs Nginx on port 8000 and injects test environment variables.*
     ```bash
-    docker run --rm -p 8000:80 kube-practice-app
+    docker run --rm -p 8080:8000 \
+      -e ENVIRONMENT="local-docker-test" \
+      -e ENVIRONMENT_FROM_SECRET="My Docker Secret" \
+      --name my-nginx-test \
+      nginx-centos:v1
     ```
-    The application will be available at `http://localhost:8000`.
+
+4.  **Verify it works:**
+    *   Open `http://localhost:8080` in your browser.
+    *   The page should display: `Current Environment: local-docker-test`.
+    *   The browser tab title should be: `My Docker Secret`.
 
 <br>
 
 <details>
 <summary><b>📋 Project Goal (Full Task Description)</b></summary>
 
-1.  Deploy minikube
+1.  Deploy minikube.
 2.  Using the base CentOS 7 image, write a Dockerfile to run Nginx.
 3.  Write a Helm chart that includes:
     *   3.1. **ConfigMap** for the `ENVIRONMENT` variable (`dev`, `stage`, `prod`).
@@ -153,10 +130,11 @@ Currently, the project consists of a simple web application built with FastAPI a
         *   3.3.4. Have `readiness` and `liveness` probes on the `/healthcheck` endpoint.
     *   3.4. A **Service** of type ClusterIP.
     *   3.5. An **Ingress** for hosts: `localhost` (dev), `stage.domain.space` (stage), `prod.domain.space` (prod).
-    *   3.6. **CertManager** with manifests for an Issuer and Certificate (without actual issuance).
+    *   3.6. **CertManager** with manifests for an Issuer and Certificate.
     *   3.7. A **HorizontalPodAutoscaler** to scale replicas from 2 to 4 based on CPU/RAM > 80%.
     *   3.8. A **Helmfile** for three environments (dev, stage, prod).
 4.  Verify by displaying the `ENVIRONMENT` and `ENVIRONMENT_FROM_SECRET` variables in the application's responses.
 5.  Prepare configuration files for all environments.
+6.  The result, including the helm chart and screenshots, should be submitted to a public Git repository.
 
 </details>
